@@ -46,7 +46,17 @@ def inLuzs(testBall):
     return False
 
 def proschet():
-    print("proschet")
+    angles = []
+    xyLuzs = [(45, 45), (340, 45), (635, 45), (45, 395), (340, 395), (635, 395)]
+    for i in range(5, 2, -1):
+        c = math.dist(xyLuzs[i], (ball.x0, ball.y0))
+        b = xyLuzs[i][0] - ball.x0
+        angles.append(round((math.acos(b / c)) * 180 / math.pi))
+    for i in range(0, 3):
+        c = math.dist(xyLuzs[i], (ball.x0, ball.y0))
+        b = xyLuzs[i][0] - ball.x0
+        angles.append(round((2 * math.pi - math.acos(b / c)) * 180 / math.pi))
+    lAng.config(text= angles, background= "white")
 
 wx = 1100
 wy = 680
@@ -62,6 +72,12 @@ btSp.place(x=70, y=450)
 
 btAp = tk.Button(text="Просчет траектории", command= proschet)
 btAp.place(x=200, y=450)
+
+label1 = tk.Label(text="Углы (отсчитываются по часовой стрелке с правой нижней лузы)")
+label1.place(x=200, y=490)
+
+lAng = tk.Label(text=None, background= "grey")
+lAng.place(x=200, y=520)
 
 while True:
     window.delete('all')
