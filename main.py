@@ -23,30 +23,41 @@ def ballSpawn():
     ball.x0 = random.randint(80, 600)
     ball.y0 = random.randint(80, 360)
 
-def inLuzs(testBall):
+def inLuzs():
     #luz1
-    if testBall.x0 > 40 and testBall.x0 < 50 and testBall.y0 > 40 and testBall.y0 < 50:
+    if ball.x0 > 40 and ball.x0 < 50 and ball.y0 > 40 and ball.y0 < 50:
         return True
     # luz2
-    if testBall.x0 > 335 and testBall.x0 < 345 and testBall.y0 > 40 and testBall.y0 < 50:
+    if ball.x0 > 335 and ball.x0 < 345 and ball.y0 > 40 and ball.y0 < 50:
         return True
     # luz3
-    if testBall.x0 > 630 and testBall.x0 < 640 and testBall.y0 > 40 and testBall.y0 < 50:
+    if ball.x0 > 630 and ball.x0 < 640 and ball.y0 > 40 and ball.y0 < 50:
         return True
     # luz4
-    if testBall.x0 > 40 and testBall.x0 < 50 and testBall.y0 > 390 and testBall.y0 < 400:
+    if ball.x0 > 40 and ball.x0 < 50 and ball.y0 > 390 and ball.y0 < 400:
         return True
     # luz5
-    if testBall.x0 > 335 and testBall.x0 < 345 and testBall.y0 > 390 and testBall.y0 < 400:
+    if ball.x0 > 335 and ball.x0 < 345 and ball.y0 > 390 and ball.y0 < 400:
         return True
     # luz6
-    if testBall.x0 > 630 and testBall.x0 < 640 and testBall.y0 > 390 and testBall.y0 < 400:
+    if ball.x0 > 630 and ball.x0 < 640 and ball.y0 > 390 and ball.y0 < 400:
         return True
-
     return False
 
+def setAng():
+    global select_ang, angles
+    if int(entry1.get()) in angles:
+        select_ang = int(entry1.get())
+
+def move():
+    ball.vx = math.cos(select_ang)
+    ball.vy = math.sin(select_ang)
+    while not inLuzs():
+        ball.x0 += ball.vx
+        ball.y0 += ball.vy
+
 def proschet():
-    angles = []
+    angles.clear()
     xyLuzs = [(45, 45), (340, 45), (635, 45), (45, 395), (340, 395), (635, 395)]
     for i in range(5, 2, -1):
         c = math.dist(xyLuzs[i], (ball.x0, ball.y0))
@@ -60,32 +71,43 @@ def proschet():
 
 wx = 1100
 wy = 680
+select_ang = 0
+angles = []
 ball = Ball()
 root = tk.Tk()
 root.title("Бильярд")
-maxStrike = None
-
 window = tk.Canvas(root, width=wx, height=wy, background="grey")
 
-btSp = tk.Button(text="Spawn ball", command=ballSpawn)
+
+entry1 = tk.Entry()
+entry1.insert(0, "0")
+entry1.place(x= 270, y= 540)
+
+btSp = tk.Button(text="Создание шарика", command=ballSpawn)
 btSp.place(x=70, y=450)
 
-btAp = tk.Button(text="Просчет траектории", command= proschet)
-btAp.place(x=200, y=450)
+btSt = tk.Button(text="Удар", command= move)
+btSt.place(x=70, y=530)
 
-label1 = tk.Label(text="Углы (отсчитываются по часовой стрелке с правой нижней лузы)")
-label1.place(x=200, y=490)
+btAp = tk.Button(text="Просчет вектора скорости", command= proschet)
+btAp.place(x=70, y=490)
+
+btVv = tk.Button(text="Ввод", command= setAng)
+btVv.place(x=400, y=537)
+
+label1 = tk.Label(text="Углы (отсчитываются по часовой стрелке от правой нижней лузы)")
+label1.place(x=270, y=450)
 
 lAng = tk.Label(text=None, background= "grey")
-lAng.place(x=200, y=520)
+lAng.place(x=270, y=470)
+
+label1 = tk.Label(text="Введите один из предложенных углов, под которым произойдет удар")
+label1.place(x=270, y=510)
 
 while True:
     window.delete('all')
     drawTable()
     window.pack()
-    if ball.moveFlag:
-        ball.x0 += ball.vx
-        ball.y0 += ball.vy
+    print(select_ang)
     root.update()
-    time.sleep(0.001)
-root.mainloop()
+    time.sleep(0.01)
